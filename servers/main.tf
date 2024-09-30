@@ -12,11 +12,26 @@ terraform {
   }
 }
 
+# Create Volume
+resource "hcloud_volume" "coolify_volume" {
+  name      = "coolify-volume"
+  size      = 20
+  format    = "ext4"
+  automount = true
+  location  = "hel1"
+  server_id = hcloud_server.coolify_server.id
+
+  labels = {
+    environment = "production"
+    used_by = "coolify-controller"
+  }
+}
+
 resource "hcloud_server" "coolify_server" {
   name        = "coolify-server"
   image       = "ubuntu-24.04"
-  server_type = "cx21"  # 2 CPU, 4GB RAM
-  location    = "hel1-dc2"
+  server_type = "cx22"  # 2 CPU, 4GB RAM
+  location    = "hel1"
   ssh_keys    = var.ssh_keys
 
   user_data = <<-EOF
@@ -29,5 +44,10 @@ resource "hcloud_server" "coolify_server" {
 
   lifecycle {
     ignore_changes = [ ssh_keys ]
+  }
+
+  labels = {
+    environment = "production"
+    type        = "coolify-controller"
   }
 }
