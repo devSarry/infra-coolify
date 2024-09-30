@@ -18,7 +18,6 @@ resource "hcloud_volume" "coolify_volume" {
   size      = 20
   format    = "ext4"
   automount = true
-  location  = "hel1"
   server_id = hcloud_server.coolify_server.id
 
   labels = {
