@@ -14,7 +14,7 @@ terraform {
 
 resource "hcloud_server" "coolify_server" {
   name        = "coolify-server"
-  image       = "ubuntu-22.04"
+  image       = "ubuntu-24.04"
   server_type = "cx21"  # 2 CPU, 4GB RAM
   location    = "hel1-dc2"
   ssh_keys    = var.ssh_keys
