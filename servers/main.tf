@@ -50,3 +50,16 @@ resource "hcloud_server" "coolify_server" {
     type        = "coolify-controller"
   }
 }
+
+resource "hcloud_server" "coolify_app_server" {
+  name        = "coolify-apps"
+  server_type = "cx22"
+  image       = "ubuntu-24.04"
+  location    = "hel1" 
+  ssh_keys    = var.ssh_keys
+
+  labels = {
+    environment = "production"
+    type        = "coolify-app-server"
+  }
+}
