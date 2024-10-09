@@ -48,6 +48,13 @@ resource "hcloud_server" "coolify_server" {
   }
 }
 
+resource "hcloud_volume_attachment" "coolify_server" {
+  volume_id = hcloud_volume.coolify_volume.id
+  server_id = hcloud_server.coolify_server.id
+
+  automount = true
+}
+
 resource "hcloud_server" "coolify_app_server" {
   name        = "coolify-apps"
   server_type = "cx22"
