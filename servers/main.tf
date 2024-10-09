@@ -41,9 +41,6 @@ resource "hcloud_server" "coolify_server" {
       - curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
   EOF
 
-  lifecycle {
-    ignore_changes = [ ssh_keys ]
-  }
 
   labels = {
     environment = "production"
