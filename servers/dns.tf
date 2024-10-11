@@ -12,7 +12,7 @@ resource "cloudflare_record" "root" {
   name = "@"
   content = hcloud_server.coolify_server.ipv4_address
   type = "A"
-  ttl = 3600
+  ttl = 1
   proxied = true
 }
 
@@ -22,7 +22,7 @@ resource "cloudflare_record" "wildcard" {
   name = "*"
   content = hcloud_server.coolify_server.ipv4_address
   type = "A"
-  ttl = 3600
+  ttl = 1
   proxied = true
 }
 
@@ -32,7 +32,7 @@ resource "cloudflare_record" "www" {
   name = "www"
   content = "sarry.dev"
   type = "CNAME"
-  ttl = 3600
+  ttl = 1
   proxied = true
 }
 
@@ -54,7 +54,7 @@ resource "cloudflare_record" "coolify" {
   name = "coolify"
   content = hcloud_server.coolify_server.ipv4_address
   type = "A"
-  ttl = 3600
+  ttl = 1
   proxied = true
 }
 
