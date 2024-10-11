@@ -12,3 +12,5 @@ terraform {
   }
 }
 
+provider "cloudflare" {
+}

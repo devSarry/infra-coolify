@@ -28,7 +28,7 @@ resource "cloudflare_record" "wildcard" {
 
 # Redirect www to non-www
 resource "cloudflare_record" "www" {
-  zone_id = data.cloudflare_zones.sarry_dev_full_zone
+  zone_id = data.cloudflare_zones.sarry_dev_full_zone.id
   name = "www"
   content = "sarry.dev"
   type = "CNAME"
@@ -36,7 +36,7 @@ resource "cloudflare_record" "www" {
 }
 
 resource "cloudflare_page_rule" "sarry_dev" {
-  zone_id = data.cloudflare_zones.sarry_dev_full_zone
+  zone_id = data.cloudflare_zones.sarry_dev_full_zone.id
   target = "www.sarry.dev/*"
   priority = 1
   actions {
@@ -49,7 +49,7 @@ resource "cloudflare_page_rule" "sarry_dev" {
 
 # Create coolify.sarry.dev DNS record
 resource "cloudflare_record" "coolify" {
-  zone_id = data.cloudflare_zones.sarry_dev_full_zone
+  zone_id = data.cloudflare_zones.sarry_dev_full_zone.id
   name = "coolify"
   content = hcloud_server.coolify_server.ipv4_address
   type = "A"
