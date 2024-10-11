@@ -1,11 +1,4 @@
-terraform {
-  required_providers {
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "~> 4.0"
-    }
-  }
-}
+
 
 # Add a new “A” record, with the hostname “coolify**”, and the value is the IP address of your remote server, and click save.
 resource "cloudflare_dns_record" "coolify_dns" {
