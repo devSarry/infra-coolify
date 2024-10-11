@@ -10,7 +10,7 @@ data "cloudflare_zones" "sarry_dev_full_zone" {
 # The @ symbol is a placeholder
 # for the root domain
 resource "cloudflare_record" "root" {
-  zone_id = data.cloudflare_zones.sarry_dev_full_zone
+  zone_id = data.cloudflare_zones.sarry_dev_full_zone.id
   name = "@"
   content = hcloud_server.coolify_server.ipv4_address
   type = "A"
@@ -19,7 +19,7 @@ resource "cloudflare_record" "root" {
 
 # Create wildcard DNS record for sarry.dev
 resource "cloudflare_record" "wildcard" {
-  zone_id = data.cloudflare_zones.sarry_dev_full_zone
+  zone_id = data.cloudflare_zones.sarry_dev_full_zone.id
   name = "*"
   content = hcloud_server.coolify_server.ipv4_address
   type = "A"
