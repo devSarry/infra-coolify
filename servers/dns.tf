@@ -13,6 +13,7 @@ resource "cloudflare_record" "root" {
   content = hcloud_server.coolify_server.ipv4_address
   type = "A"
   ttl = 3600
+  proxied = true
 }
 
 # Create wildcard DNS record for sarry.dev
@@ -22,6 +23,7 @@ resource "cloudflare_record" "wildcard" {
   content = hcloud_server.coolify_server.ipv4_address
   type = "A"
   ttl = 3600
+  proxied = true
 }
 
 # Redirect www to non-www
@@ -31,6 +33,7 @@ resource "cloudflare_record" "www" {
   content = "sarry.dev"
   type = "CNAME"
   ttl = 3600
+  proxied = true
 }
 
 resource "cloudflare_page_rule" "sarry_dev" {
@@ -52,5 +55,6 @@ resource "cloudflare_record" "coolify" {
   content = hcloud_server.coolify_server.ipv4_address
   type = "A"
   ttl = 3600
+  proxied = true
 }
 
