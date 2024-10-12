@@ -48,6 +48,19 @@ resource "cloudflare_page_rule" "sarry_dev" {
   }
 }
 
+# Page rule to redirect www.subdomain.sarry.dev to subdomain.sarry.dev
+resource "cloudflare_page_rule" "wildcard_subdomain_redirect" {
+  zone_id = data.cloudflare_zone.sarry_dev_full_zone.id
+  target  = "www.*.sarry.dev/*"
+  priority = 1
+  actions {
+    forwarding_url {
+      url         = "https://$1.sarry.dev/$2"
+      status_code = 301
+    }
+  }
+}
+
 # Create coolify.sarry.dev DNS record
 resource "cloudflare_record" "coolify" {
   zone_id = data.cloudflare_zone.sarry_dev_full_zone.id
