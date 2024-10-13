@@ -70,28 +70,3 @@ resource "cloudflare_record" "coolify" {
   ttl = 1
   proxied = true
 }
-
-
-resource "cloudflare_ruleset" "redirect-www-wildcard-to-non-www" {
-  zone_id     = data.cloudflare_zone.sarry_dev_full_zone.id
-  name        = "redirects"
-  description = "Redirect www subdomains to non-www"
-  kind        = "zone"
-  phase       = "http_request_dynamic_redirect"
-
-  rules {
-    action = "redirect"
-    action_parameters {
-      from_value {
-        status_code = 302
-        target_url {
-          expression = "wildcard_replace(http.request.full_uri, \"https://www.*\", \"https://${1}\")"
-        }
-        preserve_query_string = true
-      }
-    }
-    expression  = "(http.request.full_uri wildcard \"https://www.*\")"
-    description = "Redirect www subdomains to non-www"
-    enabled     = true
-  }
-}
