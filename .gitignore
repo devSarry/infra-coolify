@@ -1,0 +1,5 @@
+.env
+cloudflare/
+.terraform/
+/servers/.terraform
+.terraform.lock.hcl
