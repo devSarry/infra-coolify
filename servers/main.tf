@@ -9,14 +9,14 @@ resource "hcloud_volume" "coolify_volume" {
 
   labels = {
     environment = "production"
-    used_by = "coolify-controller"
+    used_by     = "coolify-controller"
   }
 }
 
 resource "hcloud_server" "coolify_server" {
   name        = "coolify-server"
   image       = "ubuntu-24.04"
-  server_type = "cx22"  # 2 CPU, 4GB RAM
+  server_type = "cx22" # 2 CPU, 4GB RAM
   location    = "hel1"
   ssh_keys    = var.ssh_keys
 
@@ -39,7 +39,7 @@ resource "hcloud_server" "coolify_app_server" {
   name        = "coolify-apps"
   server_type = "cx22"
   image       = "ubuntu-24.04"
-  location    = "hel1" 
+  location    = "hel1"
   ssh_keys    = var.ssh_keys
 
   labels = {
