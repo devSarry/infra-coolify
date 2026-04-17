@@ -44,6 +44,18 @@ variable "redirect_www_to_apex" {
   default     = false
 }
 
+variable "manage_redirects" {
+  description = "Whether Terraform should manage redirect rulesets"
+  type        = bool
+  default     = false
+}
+
+variable "manage_waf" {
+  description = "Whether Terraform should manage WAF rulesets"
+  type        = bool
+  default     = false
+}
+
 variable "proxied" {
   description = "Enable Cloudflare proxy (orange cloud) for DNS records"
   type        = bool

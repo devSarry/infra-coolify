@@ -1,0 +1,77 @@
+#cloud-config
+hostname: ${hostname}
+fqdn: ${hostname}
+preserve_hostname: false
+
+package_update: true
+package_upgrade: false
+
+ssh_pwauth: false
+
+packages:
+  - ca-certificates
+  - curl
+  - gnupg
+
+ssh_authorized_keys:
+%{ for key in authorized_ssh_public_keys ~}
+  - ${key}
+%{ endfor ~}
+
+write_files:
+  - path: /etc/docker/daemon.json
+    owner: root:root
+    permissions: '0644'
+    content: |
+      {
+        "default-address-pools": [
+          {"base": "172.20.0.0/14", "size": 24}
+        ]
+      }
+
+  - path: /usr/local/sbin/app-server-bootstrap.sh
+    owner: root:root
+    permissions: '0755'
+    content: |
+      #!/usr/bin/env bash
+      set -euo pipefail
+
+      log() { echo "[bootstrap] $*"; }
+
+      passwd -l root || true
+      chage -d -1 root
+      chage -I -1 -m 0 -M 99999 -E -1 root
+
+      if ! command -v tailscale >/dev/null 2>&1; then
+        log "installing Tailscale"
+        curl -fsSL https://tailscale.com/install.sh | sh
+      fi
+
+      if ! tailscale status >/dev/null 2>&1; then
+        log "joining tailnet as ${tailscale_hostname}"
+        tailscale up \
+          --authkey='${tailscale_auth_key}' \
+          --hostname='${tailscale_hostname}' \
+          --accept-routes=false \
+          --ssh=false
+      fi
+
+      if ! command -v docker >/dev/null 2>&1; then
+        log "installing Docker"
+        install -m 0755 -d /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+        chmod a+r /etc/apt/keyrings/docker.asc
+        . /etc/os-release
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $VERSION_CODENAME stable" \
+          > /etc/apt/sources.list.d/docker.list
+        apt-get update
+        apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+        systemctl enable --now docker
+      fi
+
+      log "done"
+
+runcmd:
+  - /usr/local/sbin/app-server-bootstrap.sh 2>&1 | tee -a /var/log/app-server-bootstrap.log
+
+final_message: "app server ready after $UPTIME seconds"
