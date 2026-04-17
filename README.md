@@ -201,16 +201,17 @@ If you set `operator_ssh_public_keys`, those keys are in `/root/.ssh/authorized_
 ## Files
 
 ```
-versions.tf          providers + Terraform Cloud backend
-variables.tf         root inputs with validation
-main.tf              module wiring + Tailscale keys + TLS keypair
-outputs.tf           useful values after apply
-terraform.tfvars.example
-modules/
-  network/           hcloud_network + subnet (192.168.0.0/16)
-  control-plane/     server + data volume + firewall + cloud-init
-  app-server/        server + firewall + cloud-init
-  cloudflare-dns/    apex + wildcard A records
+coolify-prod/
+  config.tf                  providers + Terraform Cloud backend
+  variables.tf               root inputs with validation
+  main.tf                    module wiring + Tailscale keys + TLS keypair
+  outputs.tf                 useful values after apply
+  terraform.tfvars.example
+  modules/
+    network/                 hcloud_network + subnet (192.168.0.0/16)
+    control-plane/           server + data volume + firewall + cloud-init
+    app-server/              server + firewall + cloud-init
+    cloudflare-zone/         apex + wildcard A records
 ```
 
 ## Notes
