@@ -1,5 +1,6 @@
-hcloud_token                  = "hc..."
-cloudflare_api_token          = "cf..."
+# Provider credentials are expected via environment variables, not terraform.tfvars:
+#   HCLOUD_TOKEN
+#   CLOUDFLARE_API_TOKEN
 tailscale_tailnet             = "sarry.dev"
 tailscale_oauth_client_id     = "ts-client-id"
 tailscale_oauth_client_secret = "ts-client-secret"
