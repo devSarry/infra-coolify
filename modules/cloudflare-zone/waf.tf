@@ -1,5 +1,7 @@
 # WAF Custom Rules - IP allowlisting via Ruleset engine
 resource "cloudflare_ruleset" "waf_custom" {
+  count = var.manage_waf ? 1 : 0
+
   zone_id = data.cloudflare_zone.this.zone_id
   name    = "Coolify WAF Rules"
   kind    = "zone"

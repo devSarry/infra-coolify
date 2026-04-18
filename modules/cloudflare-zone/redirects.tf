@@ -1,6 +1,6 @@
 # www → apex redirect via Ruleset engine
 resource "cloudflare_ruleset" "redirects" {
-  count = var.redirect_www_to_apex ? 1 : 0
+  count = var.manage_redirects && var.redirect_www_to_apex ? 1 : 0
 
   zone_id = data.cloudflare_zone.this.zone_id
   name    = "Redirect www to apex"

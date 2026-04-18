@@ -1,0 +1,103 @@
+#cloud-config
+hostname: ${hostname}
+fqdn: ${hostname}
+preserve_hostname: false
+
+package_update: true
+package_upgrade: false
+
+packages:
+  - ca-certificates
+  - curl
+  - gnupg
+  - jq
+
+ssh_authorized_keys:
+%{ for key in operator_ssh_public_keys ~}
+  - ${key}
+%{ endfor ~}
+
+write_files:
+  - path: /etc/docker/daemon.json
+    owner: root:root
+    permissions: '0644'
+    content: |
+      {
+        "default-address-pools": [
+          {"base": "172.20.0.0/14", "size": 24}
+        ]
+      }
+
+  - path: /root/coolify_management_key
+    owner: root:root
+    permissions: '0600'
+    content: |
+      ${indent(6, trimspace(ssh_private_key_openssh))}
+
+  - path: /root/coolify_management_key.pub
+    owner: root:root
+    permissions: '0644'
+    content: "${ssh_public_key_openssh}"
+
+  - path: /usr/local/sbin/coolify-bootstrap.sh
+    owner: root:root
+    permissions: '0755'
+    content: |
+      #!/usr/bin/env bash
+      set -euo pipefail
+
+      log() { echo "[bootstrap] $*"; }
+
+      DEV="/dev/disk/by-id/scsi-0HC_Volume_${data_volume_id}"
+      log "waiting for $DEV"
+      for i in $(seq 1 60); do
+        [ -b "$DEV" ] && break
+        sleep 2
+      done
+      if [ ! -b "$DEV" ]; then
+        log "ERROR: volume device never appeared"
+        exit 1
+      fi
+
+      mkdir -p /data/coolify
+
+      if ! mountpoint -q /data/coolify; then
+        if [ -z "$(blkid -s TYPE -o value "$DEV" || true)" ]; then
+          log "formatting $DEV as ext4"
+          mkfs.ext4 -L coolify-data "$DEV"
+        fi
+        mount "$DEV" /data/coolify
+      fi
+
+      if ! grep -q "/data/coolify" /etc/fstab; then
+        echo "$DEV /data/coolify ext4 discard,nofail,defaults 0 0" >> /etc/fstab
+      fi
+
+      if ! command -v tailscale >/dev/null 2>&1; then
+        log "installing Tailscale"
+        curl -fsSL https://tailscale.com/install.sh | sh
+      fi
+
+      if ! tailscale status >/dev/null 2>&1; then
+        log "joining tailnet as ${tailscale_hostname}"
+        tailscale up \
+          --authkey='${tailscale_auth_key}' \
+          --hostname='${tailscale_hostname}' \
+          --accept-routes=false \
+          --ssh=false
+      fi
+
+      if [ ! -f /data/coolify/source/docker-compose.yml ]; then
+        log "installing Coolify version=${coolify_version}"
+        export COOLIFY_VERSION='${coolify_version}'
+        curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
+      else
+        log "Coolify already installed; skipping"
+      fi
+
+      log "done"
+
+runcmd:
+  - /usr/local/sbin/coolify-bootstrap.sh 2>&1 | tee -a /var/log/coolify-bootstrap.log
+
+final_message: "control plane ready after $UPTIME seconds"

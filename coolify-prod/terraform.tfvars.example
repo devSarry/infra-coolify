@@ -1,0 +1,21 @@
+# Provider credentials are expected via environment variables, not terraform.tfvars:
+#   HCLOUD_TOKEN
+#   CLOUDFLARE_API_TOKEN
+tailscale_tailnet             = "sarry.dev"
+tailscale_oauth_client_id     = "ts-client-id"
+tailscale_oauth_client_secret = "ts-client-secret"
+
+instance_name = "prod"
+base_domain   = "sarry.dev"
+tailscale_tag = "tag:coolify-prod"
+
+operator_ssh_public_keys = [
+  "ssh-ed25519 AAAA... you@example",
+]
+
+app_servers = {
+  "app-1" = {
+    server_type = "cpx21"
+    private_ip  = "192.168.1.20"
+  }
+}
