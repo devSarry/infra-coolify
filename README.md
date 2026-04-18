@@ -58,8 +58,11 @@ At `https://console.hetzner.cloud/` → your project → Security → API Tokens
 
 At `https://app.terraform.io`:
 
-- Create an organization (or reuse one). Update `versions.tf`'s `cloud.organization` to match.
-- Create a workspace per deployment. Use tag `coolify` so it auto-matches `versions.tf`'s `workspaces { tags = ["coolify"] }`.
+- Create an organization (or reuse one). Update `coolify-prod/config.tf`'s `cloud.organization` to match.
+- Create the workspace `infra-coolify` (matches `coolify-prod/config.tf`).
+- Set the workspace **Execution Mode** depending on how you want to run:
+  - **Local** → run `terraform plan/apply` on your machine while keeping state in Terraform Cloud.
+  - **Remote** (or **Agent**) → run plans/applies in Terraform Cloud.
 - In each workspace, set these as **sensitive** workspace variables (env or terraform vars):
   - `hcloud_token`
   - `cloudflare_api_token`
@@ -172,7 +175,7 @@ Then `terraform apply`. After it finishes, go to Coolify UI and add the new serv
 ## Spinning up a new independent deployment
 
 1. Add `tag:coolify-<new-name>` to your tailnet ACL policy.
-2. Create a new TFC workspace with tag `coolify`.
+2. This stack currently targets one TFC workspace (`infra-coolify`). For an additional independent deployment, copy this stack (or update backend workspace name in `coolify-prod/config.tf`) and point it at a different workspace.
 3. Set its workspace variables (new `instance_name`, same tokens).
 4. `terraform apply`.
 
