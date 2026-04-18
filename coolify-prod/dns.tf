@@ -9,15 +9,6 @@ module "cloudflare_zone" {
     ["cue"],
   ))
 
-  coolify_dashboard_subdomain = "coolify"
-  manage_redirects            = false
-  manage_waf                  = false
-  admin_ip_allowlist          = []
-
-  rate_limit_general_rpm = 300
-  rate_limit_auth_rpm    = 10
-
-  redirect_www_to_apex = true
-  proxied              = false
-  ttl                  = 1
+  proxied = false
+  ttl     = 60
 }
