@@ -14,48 +14,6 @@ variable "subdomains" {
   default     = []
 }
 
-variable "coolify_dashboard_subdomain" {
-  description = "Subdomain hosting the Coolify dashboard to protect with IP allowlist"
-  type        = string
-  default     = ""
-}
-
-variable "admin_ip_allowlist" {
-  description = "List of IPs/CIDRs allowed to access the Coolify dashboard"
-  type        = list(string)
-  default     = []
-}
-
-variable "rate_limit_general_rpm" {
-  description = "General rate limit in requests per minute"
-  type        = number
-  default     = 300
-}
-
-variable "rate_limit_auth_rpm" {
-  description = "Rate limit for auth endpoints in requests per minute"
-  type        = number
-  default     = 10
-}
-
-variable "redirect_www_to_apex" {
-  description = "Redirect www.domain.com to domain.com"
-  type        = bool
-  default     = false
-}
-
-variable "manage_redirects" {
-  description = "Whether Terraform should manage redirect rulesets"
-  type        = bool
-  default     = false
-}
-
-variable "manage_waf" {
-  description = "Whether Terraform should manage WAF rulesets"
-  type        = bool
-  default     = false
-}
-
 variable "proxied" {
   description = "Enable Cloudflare proxy (orange cloud) for DNS records"
   type        = bool
