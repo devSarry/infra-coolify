@@ -127,8 +127,12 @@ coolify-prod (root)
 ## Usage
 
 ```bash
-# Copy and populate secrets
+# Copy and populate Terraform variables
 cp terraform.tfvars.example terraform.tfvars
+
+# Export provider credentials
+export HCLOUD_TOKEN=...
+export CLOUDFLARE_API_TOKEN=...
 
 # Initialise (uses Terraform Cloud remote backend)
 terraform init
@@ -139,5 +143,4 @@ terraform plan
 # Apply
 terraform apply
 ```
-
 
