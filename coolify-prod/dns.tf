@@ -6,7 +6,10 @@ module "cloudflare_zone" {
 
   subdomains = distinct(concat(
     [var.app_subdomain],
-    ["cue"],
+    [
+      "cue",
+      "secure-note"
+    ],
   ))
 
   proxied = false
