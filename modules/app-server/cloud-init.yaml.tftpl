@@ -29,6 +29,14 @@ write_files:
         ]
       }
 
+  - path: /etc/apt/apt.conf.d/52unattended-upgrades-local
+    owner: root:root
+    permissions: '0644'
+    content: |
+      Unattended-Upgrade::Automatic-Reboot "true";
+      Unattended-Upgrade::Automatic-Reboot-WithUsers "true";
+      Unattended-Upgrade::Automatic-Reboot-Time "04:00";
+
   - path: /usr/local/sbin/app-server-bootstrap.sh
     owner: root:root
     permissions: '0755'
